@@ -26,7 +26,7 @@ public class Wheel_Logic : MonoBehaviour {
 	void LateUpdate () 
     {
         SimulateAxis();
-        visualModel.Rotate(0, wheelRigid.angularVelocity.y, 0);
+        visualModel.Rotate(wheelRigid.angularVelocity.y, 0, 0);
 
         //apply the motor torque to the wheel collider
         wheelCollider.motorTorque = force * curFloat * Time.deltaTime;
