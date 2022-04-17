@@ -9,6 +9,7 @@ public class MarkChecker : MonoBehaviour
         if (other.CompareTag("Mark"))
         {
             other.gameObject.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.green * 1.2f);
+            other.gameObject.GetComponent<AudioSource>().Play();
             Game_Manager.singleton.CompleteMarker(other);
         }
 

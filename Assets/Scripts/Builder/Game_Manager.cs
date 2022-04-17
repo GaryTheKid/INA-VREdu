@@ -240,6 +240,7 @@ public class Game_Manager : MonoBehaviour {
         if (markers.Count == 0)
         {
             completionMarker.material.SetColor("_EmissionColor", Color.green * 1.2f);
+            timer.Stop();
         }
     }
 
