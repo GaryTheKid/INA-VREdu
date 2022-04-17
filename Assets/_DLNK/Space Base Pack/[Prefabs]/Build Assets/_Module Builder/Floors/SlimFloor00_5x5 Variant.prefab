@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4305198813242180220}
   - component: {fileID: 5117033662773257059}
   - component: {fileID: 1130819639131632080}
+  - component: {fileID: 448506391}
   m_Layer: 0
   m_Name: Quad
   m_TagString: TrackPart
@@ -91,11 +92,24 @@ MeshCollider:
   m_GameObject: {fileID: 6687582508029708158}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &448506391
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6687582508029708158}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9999999, y: 2.0855393, z: 1.8915054}
+  m_Center: {x: 0.0000004954358, y: 0.54277146, z: -0.9457537}
 --- !u!1001 &6842280641624347275
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -109,15 +123,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 908910014823268613, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -25.26743
       objectReference: {fileID: 0}
     - target: {fileID: 908910014823268613, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -3.3700001
       objectReference: {fileID: 0}
     - target: {fileID: 908910014823268613, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2.9649975
       objectReference: {fileID: 0}
     - target: {fileID: 908910014823268613, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
       propertyPath: m_LocalRotation.w
@@ -147,13 +161,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2984860634342626266, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4594675970855177900, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
       propertyPath: m_Materials.Array.data[3]
       value: 
       objectReference: {fileID: 2100000, guid: 22252ecfd77e945499f18f3cca120db2, type: 2}
+    - target: {fileID: 4884066521214527723, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 9169141293937746590, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
       propertyPath: m_Name
       value: SlimFloor00_5x5 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 9169141293937746590, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a3748be6585b9b40890a7099ba07665, type: 3}

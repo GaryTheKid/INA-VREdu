@@ -13,12 +13,13 @@ public class Game_Manager : MonoBehaviour {
     //A list that hold every part we have attached to our Siege equipment(?)
     private List<Transform> PlayerParts = new List<Transform>();
 
-    [SerializeField] private Transform startingCube; //The starter cube, as I said in the video, 
-    //you can simply drag and drop it in the list instead of this shenannigans, I blame coffee for this
+    [SerializeField] private Transform baseCube; //The starter cube
+    private Vector3 initPos;
+    private Quaternion initRot;
 
-    [SerializeField] private GameObject partToPlacePrefab; //The prefab we want to instantiate
-    private GameObject partToPlace; //The actual instantiated game object
-    private Transform socketToPlace; //The socket we are going to place it to
+    [SerializeField] private GameObject partPrefab; //The prefab we want to instantiate
+    private GameObject part; //The actual instantiated game object
+    private Transform socket; //The socket we are going to place it to
     private Vector3 placePos; //Where we are going to place it
     private bool isReadyForInstantiate;
 
@@ -46,7 +47,9 @@ public class Game_Manager : MonoBehaviour {
 
     private void Start()
     {
-        PlayerParts.Add(startingCube);
+        PlayerParts.Add(baseCube);
+        initPos = baseCube.position;
+        initRot = baseCube.rotation;
         inputActions.XRIRightHand.InstantiatePart.performed += InstantiatePart;
     }
 
@@ -61,23 +64,23 @@ public class Game_Manager : MonoBehaviour {
         else
         { //If we are at play mode
             //and we had a part we where suppose to place
-            if (partToPlace)
+            if (part)
             {
                 //destroy it
-                Destroy(partToPlace);
-                partToPlace = null;
+                Destroy(part);
+                part = null;
             }
         }
     }
 
     void ReadyInstantiatePart()
     {
-        if (!partToPlace) //If we don't have a part to place
+        if (!part) //If we don't have a part to place
         {
-            if (partToPlacePrefab) //but we have a prefab for it
+            if (partPrefab) //but we have a prefab for it
             {
                 //instantiate the part on a position way out of sight from the camera
-                partToPlace = Instantiate(partToPlacePrefab, -Vector3.up * 2000, Quaternion.identity) as GameObject;
+                part = Instantiate(partPrefab, -Vector3.up * 2000, Quaternion.identity) as GameObject;
             }
             //if we don't have a prefab, then the player is either sleeping or haven't decided what to place
             isReadyForInstantiate = false;
@@ -95,10 +98,10 @@ public class Game_Manager : MonoBehaviour {
             }
 
             //Update the part's position
-            partToPlace.transform.position = placePos;
+            part.transform.position = placePos;
 
             //And if we click
-            if (socketToPlace != null)
+            if (socket != null)
             {
                 isReadyForInstantiate = true;
             }
@@ -110,28 +113,27 @@ public class Game_Manager : MonoBehaviour {
         if (isReadyForInstantiate)
         {
             //...store the Siege part base of the "part to place"
-            SiegePart_base placeBase = partToPlace.GetComponent<SiegePart_base>();
+            SiegePart_base placeBase = part.GetComponent<SiegePart_base>();
 
             //add it to the list
-            PlayerParts.Add(partToPlace.transform);
+            PlayerParts.Add(part.transform);
             //enable it's collider
-            partToPlace.GetComponentInChildren<Collider>().enabled = true;
+            part.GetComponentInChildren<Collider>().enabled = true;
 
             //assign a target to the joint
-            placeBase.AssignTargetToJoint(socketToPlace.parent);
+            placeBase.AssignTargetToJoint(socket.parent);
 
             //disable the socket
-            placeBase.DisableSocket(socketToPlace);
+            placeBase.DisableSocket(socket);
 
             //update the position once more
-            partToPlace.transform.position = placePos;
+            part.transform.position = placePos;
 
-            partToPlace = null;
+            part = null;
 
             isReadyForInstantiate = false;
         }
     }
-
 
     void CheckHit(RaycastHit hit)
     {
@@ -142,27 +144,27 @@ public class Game_Manager : MonoBehaviour {
             SiegePart_base partBase = hit.transform.GetComponent<SiegePart_base>();
                       
             //Find the closest socket to our hit.point
-            socketToPlace = partBase.ReturnClosestDirection(hit.point);
+            socket = partBase.ReturnClosestDirection(hit.point);
 
             //if we have a socket, then update the place pos
-            if (socketToPlace) //The socket might return null if the part doesn't have any sockets, this avoids errors from that
+            if (socket) //The socket might return null if the part doesn't have any sockets, this avoids errors from that
             {
-                placePos = socketToPlace.position;
+                placePos = socket.position;
 
                 //We want to look at the center of the other parts mesh
                 //Since the transform.position gives the pivot of a gameobject,
                 //it might not always be the correct position we want our part to look
                 //thus we simply find the center of that other parts mesh
 
-                Vector3 dir = partBase.rendererToFindEdges.bounds.center - socketToPlace.position;
+                Vector3 dir = partBase.rendererToFindEdges.bounds.center - socket.position;
 
                 dir.Normalize();
 
                 if (dir == Vector3.zero)
-                    dir = -socketToPlace.forward;
+                    dir = -socket.forward;
 
                 Quaternion rot = Quaternion.LookRotation(dir);
-                partToPlace.transform.rotation = rot;
+                part.transform.rotation = rot;
                 //partToPlace.transform.LookAt(partBase.rendererToFindEdges.bounds.center);  
             }
         }
@@ -176,18 +178,18 @@ public class Game_Manager : MonoBehaviour {
     //Drop this script into a UI button's event system and assign the prefab from there
     public void PassNewPrefabToInstantiate (GameObject prefab)
     {
-        if (partToPlace) //If we already had a part
+        if (part) //If we already had a part
         {
             //remove it from the list
-            if (PlayerParts.Contains(partToPlace.transform))
-                PlayerParts.Remove(partToPlace.transform);
+            if (PlayerParts.Contains(part.transform))
+                PlayerParts.Remove(part.transform);
           
             //and anihilate it
-            Destroy(partToPlace);
+            Destroy(part);
         }
 
         //Pass the new prefab as the part to place prefab
-        partToPlacePrefab = prefab;
+        partPrefab = prefab;
     }
 
     public void EnablePlayMode()
@@ -206,6 +208,30 @@ public class Game_Manager : MonoBehaviour {
         //Would be by using the Time.scale and changing it from 0 to 1 etc.
         //Of course for functions that are using the Time.delta time (camera scripts etc.)
         //you should do either another timer or simply avoid using the deltaTime.
+    }
+
+    public void ResetGame()
+    {
+        // Disable play mode
+        playMode = false;
+
+        // clear all parts except the base cube
+        for (int i = 0; i < PlayerParts.Count; i++)
+        {
+            if (PlayerParts[i] != baseCube)
+            {
+                Destroy(PlayerParts[i]);
+            }
+        }
+        PlayerParts.Clear();
+        PlayerParts.Add(baseCube);
+
+        // reset base cube
+        baseCube.GetComponent<SiegePart_base>().InitializeDirections();
+        baseCube.GetComponent<SiegePart_base>().InitializeSockets();
+        baseCube.GetComponent<Rigidbody>().isKinematic = true;
+        baseCube.position = initPos;
+        baseCube.rotation = initRot;
     }
 
     public void CompleteMarker(Collider collider)

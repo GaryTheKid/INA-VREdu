@@ -34,16 +34,22 @@ public class SiegePart_base : MonoBehaviour {
 
 	void Start () 
     {
+        InitializeDirections();
+        InitializeSockets();
+    }
+
+    public void InitializeDirections()
+    {
         Transform trans = rendererToFindEdges.transform; //Get the transform from the renderer
-        
+
         //If we have a Joint, then store it
         //This if statement is basically because the Base Cube doesn't have a Joint so it would give errors otherwise
-        if(GetComponent<Joint>())
+        if (GetComponent<Joint>())
             joint = GetComponent<Joint>();
 
         //Now for every available position we can have a socket
-	    if(selectDirections.up)
-        {                
+        if (selectDirections.up)
+        {
             //Find it based on the center of the mesh we want
             Vector3 addDirection = trans.up + new Vector3(0, rendererToFindEdges.bounds.extents.y - 1, 0);
             Vector3 finalPos = trans.position + addDirection;
@@ -90,7 +96,13 @@ public class SiegePart_base : MonoBehaviour {
             Vector3 finalPos = trans.position + addDirection;
 
             directions.Add(finalPos);
-        }        
+        }
+    }
+
+    public void InitializeSockets()
+    {
+        disabledSockets.Clear();
+        Sockets.Clear();
 
         //For every direction
         for (int i = 0; i < directions.Count; i++)
@@ -114,8 +126,7 @@ public class SiegePart_base : MonoBehaviour {
         }
 
         //Alternatively, you can do all the above (or avoid it) by doing all this by hand from the inspector
-        
-	}
+    }
 
     //Find the closest socket
     public Transform ReturnClosestDirection(Vector3 pos)

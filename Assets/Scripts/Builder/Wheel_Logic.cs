@@ -12,6 +12,7 @@ public class Wheel_Logic : MonoBehaviour {
 
     public Transform visualModel;
     public float force;
+    public float dir;
 
     XRIDefaultInputActions input;
     float curFloat;
@@ -26,10 +27,10 @@ public class Wheel_Logic : MonoBehaviour {
 	void LateUpdate () 
     {
         SimulateAxis();
-        visualModel.Rotate(-wheelRigid.angularVelocity.y * 5, 0, 0);
+        visualModel.Rotate(curFloat * 5 * dir, 0, 0);
 
         //apply the motor torque to the wheel collider
-        wheelCollider.motorTorque = force * curFloat * Time.deltaTime;
+        wheelCollider.motorTorque = force * curFloat * Time.deltaTime * dir;
     }
 
     void SimulateAxis()
@@ -37,5 +38,11 @@ public class Wheel_Logic : MonoBehaviour {
         curFloat = input.XRIRightHand.Move.ReadValue<Vector2>().y;
     }
 
-  
+    public void ChangeRotateDirection()
+    {
+        if (dir > 0)
+            dir = -1;
+        else
+            dir = 1;
+    }
 }
