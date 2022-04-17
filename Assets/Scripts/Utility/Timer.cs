@@ -9,6 +9,7 @@ public class Timer : MonoBehaviour
     public bool isRunning;
 
     [SerializeField] private Image countDownImg;
+    [SerializeField] private GameObject checkMark;
     [SerializeField] private TextMeshProUGUI timeTMP;
     [SerializeField] private int min;
     [SerializeField] private int sec;
@@ -41,6 +42,12 @@ public class Timer : MonoBehaviour
             co = null;
             isRunning = false;
         }
+    }
+
+    public void DisplayCorrect()
+    {
+        checkMark.SetActive(true);
+        timeTMP.gameObject.SetActive(false);
     }
 
     IEnumerator Co_StartCounting()

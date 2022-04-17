@@ -259,6 +259,7 @@ public class Game_Manager : MonoBehaviour {
         if (inputAns == correctAns)
         {
             quizTable.DisplayCorrect();
+            timer.DisplayCorrect();
         }
         // wrong
         else
