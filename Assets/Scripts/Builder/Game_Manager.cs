@@ -8,31 +8,29 @@ public class Game_Manager : MonoBehaviour {
 
     public static Game_Manager singleton;
 
-    bool playMode; //If it's play mode, then it's not build mode :P
+    private bool playMode; //If it's play mode, then it's not build mode :P
 
-/*    public FreeCameraLook cameraRig; //Our camera's rig
-*/
     //A list that hold every part we have attached to our Siege equipment(?)
-    List<Transform> PlayerParts = new List<Transform>();
+    private List<Transform> PlayerParts = new List<Transform>();
 
-    [SerializeField]
-    Transform startingCube; //The starter cube, as I said in the video, 
+    [SerializeField] private Transform startingCube; //The starter cube, as I said in the video, 
     //you can simply drag and drop it in the list instead of this shenannigans, I blame coffee for this
 
-    [SerializeField]
-    GameObject partToPlacePrefab; //The prefab we want to instantiate
-    GameObject partToPlace; //The actual instantiated game object
+    [SerializeField] private GameObject partToPlacePrefab; //The prefab we want to instantiate
+    private GameObject partToPlace; //The actual instantiated game object
+    private Transform socketToPlace; //The socket we are going to place it to
+    private Vector3 placePos; //Where we are going to place it
+    private bool isReadyForInstantiate;
 
-    Transform socketToPlace; //The socket we are going to place it to
-    
-    Vector3 placePos; //Where we are going to place it
-
-
+    // user input
     [SerializeField] private Transform rightHandTransform;
-    Vector3 rightHandPos;
-    bool isReadyForInstantiate;
-
+    private Vector3 rightHandPos;
     public XRIDefaultInputActions inputActions;
+
+    // tutorial completion markers
+    [SerializeField] private List<Collider> markers;
+    [SerializeField] private MeshRenderer completionMarker;
+    [SerializeField] private Timer timer;
 
     void Awake()
     {
@@ -208,5 +206,31 @@ public class Game_Manager : MonoBehaviour {
         //Would be by using the Time.scale and changing it from 0 to 1 etc.
         //Of course for functions that are using the Time.delta time (camera scripts etc.)
         //you should do either another timer or simply avoid using the deltaTime.
+    }
+
+    public void CompleteMarker(Collider collider)
+    {
+        markers.Remove(collider);
+        if (markers.Count == 0)
+        {
+            completionMarker.material.SetColor("_EmissionColor", Color.green * 1.2f);
+        }
+    }
+
+    IEnumerator Co_ColorChange()
+    {
+        var time = 0f;
+        while (time < 2f)
+        {
+            Color emissionCol = completionMarker.material.color;
+            
+            time += Time.deltaTime;
+        }
+        yield return null;
+    }
+
+    public void StartTimer()
+    {
+        timer.Activate();
     }
 }
