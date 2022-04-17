@@ -12,12 +12,14 @@ public class Timer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeTMP;
     [SerializeField] private int min;
     [SerializeField] private int sec;
+    public int timeUsed;
 
     private IEnumerator co;
 
     // Start is called before the first frame update
     void Start()
     {
+        timeUsed = -1;
         timeTMP.text = min.ToString() + ":" + sec.ToString();
     }
 
@@ -53,6 +55,7 @@ public class Timer : MonoBehaviour
             if (sec > 0)
             {
                 sec -= 1;
+                timeUsed += 1;
                 yield return new WaitForSecondsRealtime(1f);
                 if(sec < 10)
                 {
