@@ -32,6 +32,8 @@ public class Game_Manager : MonoBehaviour {
     [SerializeField] private List<Collider> markers;
     [SerializeField] private MeshRenderer completionMarker;
     [SerializeField] private Timer timer;
+    [SerializeField] private QuizTableController quizTable;
+    private int correctAns;
 
     void Awake()
     {
@@ -241,6 +243,27 @@ public class Game_Manager : MonoBehaviour {
         {
             completionMarker.material.SetColor("_EmissionColor", Color.green * 1.2f);
             timer.Stop();
+            ActivateQuizTable();
+            correctAns = Mathf.RoundToInt(50f / (float)timer.timeUsed);
+        }
+    }
+
+    public void ActivateQuizTable()
+    {
+        quizTable.Activate();
+    }
+
+    public void CheckAns(int inputAns)
+    {
+        // correct
+        if (inputAns == correctAns)
+        {
+            quizTable.DisplayCorrect();
+        }
+        // wrong
+        else
+        {
+            quizTable.DisplayWrong();
         }
     }
 
