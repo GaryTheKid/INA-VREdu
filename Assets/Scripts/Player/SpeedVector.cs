@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class SpeedVector : MonoBehaviour
@@ -10,6 +11,7 @@ public class SpeedVector : MonoBehaviour
     public Rigidbody parentRB;
     public Vector3 parentSpeed;
     public Material vectorMaterial;
+    public TextMeshPro speedText;
 
     public float colorScale;
     public float emissionIntensityScale;
@@ -43,9 +45,10 @@ public class SpeedVector : MonoBehaviour
 
         // update length
         speedVectorPrefab.transform.localScale = 
-            new Vector3(speedVectorPrefab.transform.localScale.x,speedMode,
+            new Vector3(speedVectorPrefab.transform.localScale.x,-speedMode,
                 speedVectorPrefab.transform.localScale.z);
-        
+
+        speedText.text = Mathf.Abs(speedMode).ToString("F2") + "m/s";
     }
     
     
